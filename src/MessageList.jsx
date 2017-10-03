@@ -1,12 +1,19 @@
 import React, { Component } from 'react';
+
 import Message from './Message.jsx';
 
 class MessageList extends Component {
   render() {
-    console.log('Rendering <MessageList/>');
+    const messages = this.props.messages.map(msg => {
+      return <Message 
+        key={ msg.id }
+        message={ msg.content }
+        username= { msg.username } />
+    });
+
     return (
       <main className="messages">
-        <Message />
+        { messages }
         <div className="message system">
           Anonymous1 changed their name to nomnom.
         </div>

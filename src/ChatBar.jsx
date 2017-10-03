@@ -6,6 +6,7 @@ class ChatBar extends Component {
     return (
       <footer className="chatbar">
         <input
+          defaultValue={this.props.currentUser}
           className="chatbar-username"
           placeholder="Your Name (Optional)"
         />
