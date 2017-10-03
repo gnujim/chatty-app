@@ -9,7 +9,7 @@ class App extends Component {
 
     this.state = {
       currentUser: { name: 'Bob' },
-      nextId: 4,
+      nextId: 4, 
       messages: [
         {
           id: 1,
@@ -23,36 +23,39 @@ class App extends Component {
             'No, I think you lost them. You lost your marbles Bob. You lost them for good.'
         }
       ]
-    };
+    }
+    this.onNewMessage = this.onNewMessage.bind(this);
   }
 
-  addMessage(msg) {
-    const message = {
-      id: this.state.nextId,
-      username: msg.username,
-      content: msg.content
-    };
-    this.setState({
-      nextId: this.state.id + 1,
-      messages: [message].concat(this.state.messages)
-    });
-  }
-
+  // componentDidMount invoked immediately after component is mounted
   componentDidMount() {
-    console.log('componentDidMount <App />');
+    // setTimeout delays following code
     setTimeout(() => {
-      console.log('Simulating incoming message');
       // Add a new message to the list of messages in the data store
       const newMessage = {
         id: 3,
         username: 'Michelle',
         content: 'Hello there!'
-      };
+      }
       const messages = this.state.messages.concat(newMessage);
       // Update the state of the app component.
       // Calling setState will trigger a call to render() in App and all child components.
       this.setState({ messages: messages });
     }, 3000);
+  }
+
+  // onNewMessage function takes msg and takes msg object and appends
+  // to this.state.messages array (which then passes to MessageList)
+  onNewMessage(msg) {
+    const message = {
+      id: this.state.nextId,
+      username: this.state.currentUser.name,
+      content: msg
+    }
+    this.setState({
+      nextId: this.state.nextId + 1,
+      messages: this.state.messages.concat(message)
+    });
   }
 
   render() {
@@ -65,8 +68,8 @@ class App extends Component {
         </nav>
         <MessageList messages={ this.state.messages } />
         <ChatBar
-          addMessage={ this.addMessage }
           currentUser={ this.state.currentUser.name }
+          addMessage={ this.onNewMessage }
         />
       </div>
     );
