@@ -9,14 +9,14 @@ class App extends Component {
 
     this.state = {
       connected: false,
-      currentUser: { name: 'Bob' },
+      currentUser: { name: '' },
       messages: []
     };
-    this.onNewMessage = this.onNewMessage.bind(this);
+    this.addMessage = this.addMessage.bind(this);
   }
 
   componentDidMount() {
-    //
+    // use location.hostname and location.port for other users(clients) on their own comp
     this.socket = new WebSocket(`ws://${location.hostname}:${Number(location.port) + 1}`);
 
     // on server open
@@ -58,9 +58,9 @@ class App extends Component {
 
   // onNewMessage function takes msg and takes msg object and appends
   // to this.state.messages array (which then passes to MessageList)
-  onNewMessage(msg) {
+  addMessage(username, msg) {
     const message = {
-      username: this.state.currentUser.name,
+      username: username ? username : 'Anonymous',
       content: msg
     };
     this.socket.send(JSON.stringify(message));
@@ -75,7 +75,7 @@ class App extends Component {
           </a>
         </nav>
         <MessageList messages={this.state.messages} />
-        <ChatBar currentUser={this.state.currentUser.name} addMessage={this.onNewMessage} />
+        <ChatBar currentUser={this.state.currentUser.name} addMessage={this.addMessage} />
       </div>
     );
   }

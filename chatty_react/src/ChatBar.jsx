@@ -5,10 +5,18 @@ class ChatBar extends Component {
     super(props);
 
     this.state = {
+      username: '',
       chatMessage: ''
     };
+    this.onNameChange = this.onNameChange.bind(this);
     this.onMessageChange = this.onMessageChange.bind(this);
     this.onSubmitMessage = this.onSubmitMessage.bind(this);
+  }
+
+  onNameChange(event) {
+    this.setState({
+      username: event.target.value
+    });
   }
 
   // onMessageChange function listens for changes in input
@@ -23,8 +31,9 @@ class ChatBar extends Component {
   // invokes addMessage function from APP to add msg to MessageList
   onSubmitMessage(event) {
     if (event.key === 'Enter') {
-      this.props.addMessage(this.state.chatMessage);
+      this.props.addMessage(this.state.username, this.state.chatMessage);
       this.setState({
+        username: '',
         chatMessage: ''
       });
     }
@@ -36,7 +45,8 @@ class ChatBar extends Component {
         <input
           className="chatbar-username"
           placeholder="Your Name (Optional)"
-          defaultValue={this.props.currentUser}
+          onInput={this.onNameChange}
+          value={this.state.username}
         />
         <input
           className="chatbar-message"
