@@ -8,54 +8,62 @@ class App extends Component {
     super(props);
 
     this.state = {
+      connected: false,
       currentUser: { name: 'Bob' },
-      nextId: 4, 
-      messages: [
-        {
-          id: 1,
-          username: 'Bob',
-          content: 'Has anyone seen my marbles?'
-        },
-        {
-          id: 2,
-          username: 'Anonymous',
-          content:
-            'No, I think you lost them. You lost your marbles Bob. You lost them for good.'
-        }
-      ]
-    }
+      messages: []
+    };
     this.onNewMessage = this.onNewMessage.bind(this);
   }
 
-  // componentDidMount invoked immediately after component is mounted
   componentDidMount() {
-    // setTimeout delays following code
-    setTimeout(() => {
-      // Add a new message to the list of messages in the data store
-      const newMessage = {
-        id: 3,
-        username: 'Michelle',
-        content: 'Hello there!'
-      }
-      const messages = this.state.messages.concat(newMessage);
-      // Update the state of the app component.
-      // Calling setState will trigger a call to render() in App and all child components.
-      this.setState({ messages: messages });
-    }, 3000);
+    //
+    this.socket = new WebSocket(`ws://${location.hostname}:${Number(location.port) + 1}`);
+
+    // on server open
+    this.socket.onopen = () => {
+      console.log('Connected to the server');
+      this.setState({ connected: true });
+    };
+
+    // on server close
+    this.socket.onclose = () => {
+      this.setState({ connected: false });
+    };
+
+    // receiving messages from the server
+    this.socket.onmessage = e => {
+      console.info(`Received ${e.data}`);
+      this.setState({
+        messages: this.state.messages.concat(JSON.parse(e.data))
+      });
+    };
   }
+
+  // componentDidMount invoked immediately after component is mounted
+  // componentDidMount() {
+  //   // setTimeout delays following code
+  //   setTimeout(() => {
+  //     // Add a new message to the list of messages in the data store
+  //     const newMessage = {
+  //       id: 3,
+  //       username: 'Michelle',
+  //       content: 'Hello there!'
+  //     }
+  //     const messages = this.state.messages.concat(newMessage);
+  //     // Update the state of the app component.
+  //     // Calling setState will trigger a call to render() in App and all child components.
+  //     this.setState({ messages: messages });
+  //   }, 3000);
+  // }
 
   // onNewMessage function takes msg and takes msg object and appends
   // to this.state.messages array (which then passes to MessageList)
   onNewMessage(msg) {
     const message = {
-      id: this.state.nextId,
       username: this.state.currentUser.name,
       content: msg
-    }
-    this.setState({
-      nextId: this.state.nextId + 1,
-      messages: this.state.messages.concat(message)
-    });
+    };
+    this.socket.send(JSON.stringify(message));
   }
 
   render() {
@@ -66,11 +74,8 @@ class App extends Component {
             Chatty
           </a>
         </nav>
-        <MessageList messages={ this.state.messages } />
-        <ChatBar
-          currentUser={ this.state.currentUser.name }
-          addMessage={ this.onNewMessage }
-        />
+        <MessageList messages={this.state.messages} />
+        <ChatBar currentUser={this.state.currentUser.name} addMessage={this.onNewMessage} />
       </div>
     );
   }
@@ -78,3 +83,6 @@ class App extends Component {
 
 export default App;
 // export default class App extends Component ??
+// <div className="message system">
+// Anonymous1 changed their name to nomnom.
+// </div>

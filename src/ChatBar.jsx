@@ -6,7 +6,7 @@ class ChatBar extends Component {
 
     this.state = {
       chatMessage: ''
-    }
+    };
     this.onMessageChange = this.onMessageChange.bind(this);
     this.onSubmitMessage = this.onSubmitMessage.bind(this);
   }
@@ -16,17 +16,17 @@ class ChatBar extends Component {
   onMessageChange(event) {
     this.setState({
       chatMessage: event.target.value
-    })
+    });
   }
 
   // onSubmitMessage function listens for enter keypress and
   // invokes addMessage function from APP to add msg to MessageList
   onSubmitMessage(event) {
-    if (event.key == 'Enter'){
+    if (event.key === 'Enter') {
       this.props.addMessage(this.state.chatMessage);
       this.setState({
         chatMessage: ''
-      })
+      });
     }
   }
 
@@ -36,14 +36,14 @@ class ChatBar extends Component {
         <input
           className="chatbar-username"
           placeholder="Your Name (Optional)"
-          defaultValue={ this.props.currentUser }
+          defaultValue={this.props.currentUser}
         />
         <input
           className="chatbar-message"
           placeholder="Type a message and hit ENTER"
-          onInput={ this.onMessageChange }
-          onKeyPress={ this.onSubmitMessage }
-          value={ this.state.chatMessage }
+          onInput={this.onMessageChange}
+          onKeyPress={this.onSubmitMessage}
+          value={this.state.chatMessage}
         />
       </footer>
     );
