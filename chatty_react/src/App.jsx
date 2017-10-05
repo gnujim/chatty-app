@@ -10,7 +10,8 @@ class App extends Component {
     this.state = {
       connected: false,
       currentUser: { name: '' },
-      messages: []
+      messages: [],
+      userCount: 0
     };
   }
 
@@ -42,6 +43,11 @@ class App extends Component {
         case 'incomingNotification':
           this.setState({
             messages: this.state.messages.concat(data)
+          });
+          break;
+        case 'userCount':
+          this.setState({
+            userCount: data.count
           });
           break;
         default:
@@ -102,10 +108,10 @@ class App extends Component {
           <a href="/" className="navbar-brand">
             Chatty
           </a>
+          <p className="user-count">{this.state.userCount} user(s) online</p>
         </nav>
         <MessageList messages={this.state.messages} />
         <ChatBar
-          // NOT USING ????
           currentUser={this.state.currentUser.name}
           addMessage={this.addMessage}
           addNotification={this.addNotification}
