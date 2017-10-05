@@ -5,8 +5,8 @@ Chatty app is a simple, real-time, chat web application, built on ReactJS, Webpa
 
 ### Final Product
 
-![""]()
-![""]()
+!["User Bob's Screenshot"](https://github.com/gnujim/chatty-app/blob/master/docs/Screen%20Shot%202017-10-05%20at%2015.15.52.png)
+!["User Bill's Screenshot"](https://github.com/gnujim/chatty-app/blob/master/docs/Screen%20Shot%202017-10-05%20at%2015.16.08.png)
 
 ### Getting Started
 
