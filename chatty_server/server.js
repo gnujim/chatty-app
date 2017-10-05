@@ -31,12 +31,8 @@ wss.on('connection', ws => {
   ws.on('message', data => {
     let msg = JSON.parse(data);
     let message = {};
-    // MAP
     switch (msg.type) {
       case 'postMessage':
-        console.log(
-          `User ${msg.username} said ${msg.content}. Type is ${msg.type}. Color is ${msg.color}`
-        );
         message = {
           type: 'incomingMessage',
           id: uuid(),
@@ -46,7 +42,6 @@ wss.on('connection', ws => {
         };
         break;
       case 'postNotification':
-        console.log(`Type is ${msg.type}`);
         message = {
           type: 'incomingNotification',
           id: uuid(),

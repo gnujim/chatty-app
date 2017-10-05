@@ -13,7 +13,6 @@ class ChatBar extends Component {
   }
 
   handleChange = (color, event) => {
-    console.log('colour change', color);
     this.props.updateColor(color.hex);
     this.setState({
       background: color.hex
@@ -48,7 +47,6 @@ class ChatBar extends Component {
 
   onSubmitName = event => {
     if (event.key === 'Enter') {
-      console.log(`${this.state.username}`);
       this.props.addNotification(this.state.username);
       this.props.updateName(this.state.username);
     }
