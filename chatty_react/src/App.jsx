@@ -12,7 +12,6 @@ class App extends Component {
       currentUser: { name: '' },
       messages: []
     };
-    this.addMessage = this.addMessage.bind(this);
   }
 
   componentDidMount() {
@@ -31,11 +30,24 @@ class App extends Component {
     };
 
     // receiving messages from the server
-    this.socket.onmessage = e => {
-      console.info(`Received ${e.data}`);
-      this.setState({
-        messages: this.state.messages.concat(JSON.parse(e.data))
-      });
+    this.socket.onmessage = event => {
+      console.info(`Received ${event.data}`);
+      const data = JSON.parse(event.data);
+      switch (data.type) {
+        case 'incomingMessage':
+          this.setState({
+            messages: this.state.messages.concat(data)
+          });
+          break;
+        case 'incomingNotification':
+          this.setState({
+            messages: this.state.messages.concat(data)
+          });
+          break;
+        default:
+          console.log('Error');
+          throw new Error(`Unknown event type ${data.type}`);
+      }
     };
   }
 
@@ -58,13 +70,30 @@ class App extends Component {
 
   // onNewMessage function takes msg and takes msg object and appends
   // to this.state.messages array (which then passes to MessageList)
-  addMessage(username, msg) {
+  addMessage = (username, msg) => {
     const message = {
+      type: 'postMessage',
       username: username ? username : 'Anonymous',
       content: msg
     };
     this.socket.send(JSON.stringify(message));
-  }
+  };
+
+  addNotification = newName => {
+    const name = this.state.currentUser.name ? this.state.currentUser.name : 'Anonymous';
+    const notification = {
+      type: 'postNotification',
+      content: `${name} has changed their name to ${newName}`
+    };
+    this.socket.send(JSON.stringify(notification));
+  };
+
+  updateName = newName => {
+    console.log(`UPDATE NAME ${newName}`);
+    this.setState({
+      currentUser: { name: newName ? newName : 'Anonymous' }
+    });
+  };
 
   render() {
     return (
@@ -75,7 +104,13 @@ class App extends Component {
           </a>
         </nav>
         <MessageList messages={this.state.messages} />
-        <ChatBar currentUser={this.state.currentUser.name} addMessage={this.addMessage} />
+        <ChatBar
+          // NOT USING ????
+          currentUser={this.state.currentUser.name}
+          addMessage={this.addMessage}
+          addNotification={this.addNotification}
+          updateName={this.updateName}
+        />
       </div>
     );
   }
@@ -83,6 +118,3 @@ class App extends Component {
 
 export default App;
 // export default class App extends Component ??
-// <div className="message system">
-// Anonymous1 changed their name to nomnom.
-// </div>

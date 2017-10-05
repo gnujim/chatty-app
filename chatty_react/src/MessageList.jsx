@@ -5,7 +5,15 @@ import Message from './Message.jsx';
 class MessageList extends Component {
   render() {
     const messages = this.props.messages.map(msg => {
-      return <Message key={msg.id} message={msg.content} username={msg.username} />;
+      if (msg.type === 'incomingMessage') {
+        return <Message key={msg.id} message={msg.content} username={msg.username} />;
+      } else if (msg.type === 'incomingNotification') {
+        return (
+          <div key={msg.id} className="message system">
+            {msg.content}
+          </div>
+        );
+      }
     });
 
     return <main className="messages">{messages}</main>;
