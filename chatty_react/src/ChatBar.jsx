@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { CirclePicker } from 'react-color';
 
 class ChatBar extends Component {
   constructor(props) {
@@ -6,9 +7,18 @@ class ChatBar extends Component {
 
     this.state = {
       username: this.props.currentUser,
-      chatMessage: ''
+      chatMessage: '',
+      background: this.props.style.background
     };
   }
+
+  handleChange = (color, event) => {
+    console.log('colour change', color);
+    this.props.updateColor(color.hex);
+    this.setState({
+      background: color.hex
+    });
+  };
 
   onNameChange = event => {
     this.setState({
@@ -46,7 +56,14 @@ class ChatBar extends Component {
 
   render() {
     return (
-      <footer className="chatbar">
+      <footer className="chatbar" style={this.props.style}>
+        <CirclePicker
+          onChange={this.handleChange}
+          width="176px"
+          colors={['#FF6900', '#FCB900', '#7BDCB5', '#8ED1FC']}
+          circleSize={30}
+          circleSpacing={10}
+        />
         <input
           className="chatbar-username"
           placeholder="Your Name (Optional)"

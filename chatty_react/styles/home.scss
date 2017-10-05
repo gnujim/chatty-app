@@ -93,3 +93,18 @@ body {
   font-size: 18px;
   padding-right: 10px;
 }
+
+.circle-picker {
+  display: block;
+  padding-left: 8px;
+  padding-top: 8px;
+  span {
+    div {
+      span {
+        div {
+          border: 1px solid;
+        }
+      }
+    }
+  }
+}

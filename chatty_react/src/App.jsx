@@ -11,7 +11,8 @@ class App extends Component {
       connected: false,
       currentUser: { name: '' },
       messages: [],
-      userCount: 0
+      userCount: 0,
+      style: { background: '#8ed1fc' }
     };
   }
 
@@ -50,29 +51,11 @@ class App extends Component {
             userCount: data.count
           });
           break;
-        default:
           console.log('Error');
           throw new Error(`Unknown event type ${data.type}`);
       }
     };
   }
-
-  // componentDidMount invoked immediately after component is mounted
-  // componentDidMount() {
-  //   // setTimeout delays following code
-  //   setTimeout(() => {
-  //     // Add a new message to the list of messages in the data store
-  //     const newMessage = {
-  //       id: 3,
-  //       username: 'Michelle',
-  //       content: 'Hello there!'
-  //     }
-  //     const messages = this.state.messages.concat(newMessage);
-  //     // Update the state of the app component.
-  //     // Calling setState will trigger a call to render() in App and all child components.
-  //     this.setState({ messages: messages });
-  //   }, 3000);
-  // }
 
   // onNewMessage function takes msg and takes msg object and appends
   // to this.state.messages array (which then passes to MessageList)
@@ -80,7 +63,8 @@ class App extends Component {
     const message = {
       type: 'postMessage',
       username: username ? username : 'Anonymous',
-      content: msg
+      content: msg,
+      color: this.state.style.background
     };
     this.socket.send(JSON.stringify(message));
   };
@@ -101,10 +85,19 @@ class App extends Component {
     });
   };
 
+  updateColor = color => {
+    console.log(color);
+    this.setState({
+      style: {
+        background: color
+      }
+    });
+  };
+
   render() {
     return (
       <div>
-        <nav className="navbar">
+        <nav className="navbar" style={this.state.style}>
           <a href="/" className="navbar-brand">
             Chatty
           </a>
@@ -112,10 +105,12 @@ class App extends Component {
         </nav>
         <MessageList messages={this.state.messages} />
         <ChatBar
+          style={this.state.style}
           currentUser={this.state.currentUser.name}
           addMessage={this.addMessage}
           addNotification={this.addNotification}
           updateName={this.updateName}
+          updateColor={this.updateColor}
         />
       </div>
     );

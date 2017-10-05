@@ -25,22 +25,24 @@ wss.on('connection', ws => {
     type: 'userCount',
     count: wss.clients.size
   };
-  console.log(`${openCount.count} client(s) connected`);
+  console.log('Client connected');
   wss.broadcast(JSON.stringify(openCount));
 
   ws.on('message', data => {
     let msg = JSON.parse(data);
-    console.log(msg);
     let message = {};
     // MAP
     switch (msg.type) {
       case 'postMessage':
-        console.log(`User ${msg.username} said ${msg.content}. Type is ${msg.type}`);
+        console.log(
+          `User ${msg.username} said ${msg.content}. Type is ${msg.type}. Color is ${msg.color}`
+        );
         message = {
           type: 'incomingMessage',
           id: uuid(),
           username: msg.username,
-          content: msg.content
+          content: msg.content,
+          color: msg.color
         };
         break;
       case 'postNotification':
